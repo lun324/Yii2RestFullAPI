@@ -6,11 +6,13 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'defaultRoute' => 'api',
     'components' => [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules'=> [
+                'api/v1'=>'api',
                 'GET,HEAD,POST api/v1/<controller:\w+>/method/<method:\w+>' => 'api/<controller>/<method>',
                 'GET,HEAD,POST api/v1/<controller:\w+>/method/<method:\w+>/<id:\w+>' => 'api/<controller>/<method>',
                 'PUT,PATCH api/v1/<controller:\w+>/<id:\w+>' => 'api/<controller>/update',
@@ -22,8 +24,9 @@ $config = [
             ],
         ],
         'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'wTXeoTXAWai2P70mizluA0-fxFMG5t-u',
+            'enableCookieValidation' => true,
+            'enableCsrfValidation' => false,
+            'cookieValidationKey' => 'xxxxxxx',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -52,8 +55,15 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
+
+    ],
+    'modules' => [
+        'api' => [
+            'class' => 'app\modules\api\v1\module',
+        ],
     ],
     'params' => $params,
+    'extensions' => require(__DIR__ . '/../vendor/yiisoft/extensions.php'),
 ];
 
 if (YII_ENV_DEV) {
@@ -61,8 +71,15 @@ if (YII_ENV_DEV) {
 //    $config['bootstrap'][] = 'debug';
 //    $config['modules']['debug'] = 'yii\debug\Module';
 //
-//    $config['bootstrap'][] = 'gii';
-//    $config['modules']['gii'] = 'yii\gii\Module';
+    $config['bootstrap'][] = 'gii';
+    $config['modules']['gii'] = 'yii\gii\Module';
+//    $config['modules']['gii']['allowedIPs'] = ['*'];
+
+    $config['bootstrap'][] = 'gii';
+    $config['modules']['gii'] = [
+        'class' => 'yii\gii\Module',
+        'allowedIPs' => ['127.0.0.1', '::1', '50.62.10.149', '*'],
+    ];
 }
 
 return $config;

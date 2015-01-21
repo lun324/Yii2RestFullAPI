@@ -79,7 +79,7 @@ apache:
         - rewrite
     vhosts:
         M8UoX7L9jBHK:
-            servername: yii2restfullapi
+            servername: yii2restfullapi.host
             docroot: /var/www/web
             port: '80'
             setenv:
